@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earnings Call Research Tool</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 45px;
+            max-width: 620px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 28px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #718096;
+            text-align: center;
+            margin-bottom: 35px;
+            font-size: 16px;
+        }
+
+        .upload-box {
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+        }
+
+        .upload-box:hover {
+            border-color: #667eea;
+            background: #edf2f7;
+        }
+
+        .upload-box p {
+            color: #4a5568;
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+
+        .upload-box small {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102,126,234,0.4);
+        }
+
+        .btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .flash {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .limitations {
+            margin-top: 30px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .limitations h4 {
+            color: #2d3748;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .limitations ul {
+            margin-left: 18px;
+        }
+
+        .limitations li {
+            margin-bottom: 4px;
+        }
+
+        .instructions {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 14px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .instructions h4 {
+            margin-bottom: 6px;
+            color: #2d3748;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📈 Earnings Call Research Tool</h1>
+    <p class="subtitle">
+        Upload an earnings call transcript to generate structured management insights
+    </p>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+        <label class="upload-box">
+            <div style="font-size: 42px; margin-bottom: 10px;">📄</div>
+            <p><strong>Click to upload</strong></p>
+            <small>PDF or TXT • Recommended: TXT for Indian financial PDFs</small>
+            <input type="file" name="file" accept=".pdf,.txt" required onchange="enableButton()">
+        </label>
+
+        <button id="submit-btn" type="submit" class="btn" disabled>
+            Generate Summary
+        </button>
+    </form>
+
+    <div class="limitations">
+        <h4>ℹ️ Limitations (Free Tier)</h4>
+        <ul>
+            <li>Max file size: 20 MB</li>
+            <li>Only first ~12,000 characters analyzed</li>
+            <li>Processing time: ~15–30 seconds</li>
+            <li>AI usage limited for evaluation</li>
+        </ul>
+    </div>
+
+    <div class="instructions">
+        <h4>💡 How to Use</h4>
+        <p>1. Upload earnings call transcript (PDF or TXT)</p>
+        <p>2. Click “Generate Summary”</p>
+        <p>3. View structured management insights</p>
+        <p><strong>Tip:</strong> If PDF fails, convert PDF → TXT in Chrome (30 seconds)</p>
+    </div>
+</div>
+
+<script>
+    function enableButton() {
+        document.getElementById('submit-btn').disabled = false;
+    }
+</script>
+
+</body>
+</html>

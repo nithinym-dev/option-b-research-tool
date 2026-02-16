@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concall Summary</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background: #f7fafc;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 28px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            font-size: 15px;
+            opacity: 0.95;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .summary-card h2 {
+            font-size: 20px;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #edf2f7;
+        }
+
+        /* Tone + Confidence */
+        .tone-confidence {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .tone-box, .confidence-box {
+            text-align: center;
+            padding: 22px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .tone-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .confidence-box {
+            background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+        }
+
+        .tone-box h3, .confidence-box h3 {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 6px;
+        }
+
+        .value {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        /* Two-column sections */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Lists */
+        ul {
+            list-style: none;
+        }
+
+        li {
+            padding: 10px 0 10px 28px;
+            position: relative;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        .positives li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #38a169;
+            font-weight: bold;
+        }
+
+        .concerns li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #e53e3e;
+            font-weight: bold;
+        }
+
+        .initiatives li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #3182ce;
+            font-weight: bold;
+        }
+
+        /* Guidance */
+        .guidance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .guidance-item {
+            background: #f7fafc;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .guidance-item h4 {
+            font-size: 13px;
+            color: #718096;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .guidance-item p {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .not-mentioned {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        /* Capacity */
+        .capacity-text {
+            background: #f7fafc;
+            padding: 18px;
+            border-radius: 8px;
+        }
+
+        /* Back button */
+        .back-btn {
+            display: inline-block;
+            background: #4a5568;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #2d3748;
+        }
+
+        @media (max-width: 768px) {
+            .tone-confidence {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Concall Summary</h1>
+    <p>Uploaded Document: {{ filename }}</p>
+</div>
+
+<div class="container">
+
+    <!-- Management Sentiment -->
+    <div class="summary-card">
+        <h2>Management Sentiment</h2>
+        <div class="tone-confidence">
+            <div class="tone-box">
+                <h3>Management Tone</h3>
+                <div class="value">{{ summary['Tone'] }}</div>
+            </div>
+            <div class="confidence-box">
+                <h3>Confidence Level</h3>
+                <div class="value">{{ summary['Confidence'] }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Positives & Concerns -->
+    <div class="summary-grid">
+        <div class="summary-card">
+            <h2>Key Positives</h2>
+            <ul class="positives">
+                {% if summary['Key Positives']|length > 0 %}
+                    {% for item in summary['Key Positives'] %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                {% else %}
+                    <li class="not-mentioned">Not mentioned</li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <div class="summary-card">
+            <h2>Key Concerns</h2>
+            <ul class="concerns">
+                {% if summary['Key Concerns']|length > 0 %}
+                    {% for item in summary['Key Concerns'] %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                {% else %}
+                    <li class="not-mentioned">Not mentioned</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Forward Guidance -->
+    <div class="summary-card">
+        <h2>Forward Guidance</h2>
+        <div class="guidance-grid">
+            <div class="guidance-item">
+                <h4>Revenue</h4>
+                <p class="{{ 'not-mentioned' if summary['Revenue Guidance']=='Not mentioned' }}">{{ summary['Revenue Guidance'] }}</p>
+            </div>
+            <div class="guidance-item">
+                <h4>Margin</h4>
+                <p class="{{ 'not-mentioned' if summary['Margin Guidance']=='Not mentioned' }}">{{ summary['Margin Guidance'] }}</p>
+            </div>
+            <div class="guidance-item">
+                <h4>Capex</h4>
+                <p class="{{ 'not-mentioned' if summary['Capex Guidance']=='Not mentioned' }}">{{ summary['Capex Guidance'] }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Capacity & Growth -->
+    <div class="summary-grid">
+        <div class="summary-card">
+            <h2>Capacity Utilization</h2>
+            <div class="capacity-text">
+                {% if summary['Capacity Utilization']=='Not mentioned' %}
+                    <span class="not-mentioned">Not mentioned</span>
+                {% else %}
+                    {{ summary['Capacity Utilization'] }}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <h2>Growth Initiatives</h2>
+            <ul class="initiatives">
+                {% if summary['Growth Initiatives']|length > 0 %}
+                    {% for item in summary['Growth Initiatives'] %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                {% else %}
+                    <li class="not-mentioned">Not mentioned</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <a href="/" class="back-btn">← Upload Another File</a>
+
+</div>
+</body>
+</html>

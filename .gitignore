@@ -1,0 +1,41 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# =========================
+# Virtual Environment
+# =========================
+venv/
+.env
+.env.*
+
+# =========================
+# OS / Editor files
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# Uploads (runtime files)
+# =========================
+uploads/*
+!uploads/.gitkeep
+
+# =========================
+# Build / Cache
+# =========================
+*.sqlite3
+*.db
+.cache/
+
+# =========================
+# Render / Deployment
+# =========================
+render.yaml.bak
